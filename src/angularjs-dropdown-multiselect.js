@@ -120,6 +120,7 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
 				idProp: 'id',
 				externalIdProp: 'id',
 				enableSearch: false,
+				useInternalSearch: true,
 				selectionLimit: 0,
 				showCheckAll: true,
 				showUncheckAll: true,
@@ -155,6 +156,10 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
 			$scope.input = {
 				searchFilter: $scope.searchFilter || ''
 			};
+
+			$scope.$watch('input.searchFilter', function(newValue) {
+				$scope.searchFilter = newValue || ''
+			})
 
 			if (angular.isDefined($scope.settings.groupBy)) {
 				$scope.$watch('options', function(newValue) {
@@ -520,7 +525,9 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
 
 			$scope.getFilter = function(searchFilter) {
 				var filter = {};
-				filter[$scope.settings.searchField] = searchFilter;
+				if ($scope.settings.useInternalSearch) {
+					filter[$scope.settings.searchField] = searchFilter;
+				}
 				return filter;
 			};
 
